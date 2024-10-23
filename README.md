@@ -29,12 +29,12 @@ Before you begin, ensure you have [Python](https://www.python.org/downloads/) in
    
 
 ### Using Docker
-     
-     Ensure you have [Docker](https://www.docker.com/) installed, then run:
-     
-     ```bash
-     docker compose up -d
-     ```
+
+Ensure you have [Docker](https://www.docker.com/) installed, then run:
+
+```bash
+docker compose up -d
+```
 
 ## Configuration
 
