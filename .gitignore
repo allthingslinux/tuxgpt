@@ -1,0 +1,7 @@
+*
+
+!.gitignore
+
+!*.md
+!*.py
+!config-example.json
