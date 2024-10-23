@@ -1,0 +1,5 @@
+services:
+  tuxgpt:
+    build: .
+    container_name: tuxgpt
+    restart: unless-stopped
