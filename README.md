@@ -1,4 +1,4 @@
-# llmcord.py - forked from [jakobdylanc/llmcord.py](https://github.com/jakobdylanc/llmcord.py)
+# TuxGPT - forked from [jakobdylanc/llmcord.py](https://github.com/jakobdylanc/llmcord.py)
 
 This is an edited version designed to function as an AI chatbot in the [All Things Linux Discord server](https://discord.gg/linux).
 
@@ -24,7 +24,7 @@ Before you begin, ensure you have [Python](https://www.python.org/downloads/) in
    - **Using Python:**
      
      ```bash
-     python llmcord.py
+     python tuxgpt.py
      ```
    
 
