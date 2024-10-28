@@ -3,35 +3,23 @@
 This is an edited version designed to function as an AI chatbot in the [All Things Linux Discord server](https://discord.gg/linux).
 
 ## Installation
+### 1. Clone the repository
+```bash
+git clone https://github.com/allthingslinux/tuxgpt
+```
 
-Before you begin, ensure you have [Python](https://www.python.org/downloads/) installed and clone this repository.
-
-### Bare metal
-
-1. **Install Python Dependencies:**
-   
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Configure the Bot:**
-   
+### 2. Configure the Bot
    - Duplicate the `config-example.json` file and rename it to `config.json`.
    - Edit `config.json` with your desired settings.
 
-3. **Run the Bot:**
-   
-   - **Using Python:**
-     
-     ```bash
-     python tuxgpt.py
-     ```
-   
-
-### Using Docker
-
-Ensure you have [Docker](https://www.docker.com/) installed, then run:
-
+### 3. Run the Bot
+#### Bare metal:
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python tuxgpt.py
+```
+#### Using Docker
 ```bash
 docker compose up -d
 ```
