@@ -1,14 +1,14 @@
 import asyncio
-import base64
+from base64 import b64encode
 from dataclasses import dataclass, field
 from datetime import datetime as dt
-import json
 import logging
-import requests
+import yaml
 from typing import Literal, Optional
 
 import discord
 from openai import AsyncOpenAI
+import httpx
 
 logging.basicConfig(
     level=logging.INFO,
@@ -30,9 +30,9 @@ EDIT_DELAY_SECONDS = 1
 MAX_MESSAGE_NODES = 100
 
 
-def get_config(filename="config.json"):
+def get_config(filename="config.yaml"):
     with open(filename, "r") as file:
-        return {k: v for d in json.load(file).values() for k, v in d.items()}
+        return yaml.safe_load(file)
 
 
 cfg = get_config()
@@ -41,6 +41,8 @@ intents = discord.Intents.default()
 intents.message_content = True
 activity = discord.CustomActivity(name=cfg["status_message"][:128] or "github.com/jakobdylanc/llmcord.py")
 discord_client = discord.Client(intents=intents, activity=activity)
+
+httpx_client = httpx.AsyncClient()  # Use httpx client for asynchronous HTTP requests
 
 msg_nodes = {}
 last_task_time = None
@@ -72,7 +74,7 @@ async def on_message(new_msg):
     if (
         new_msg.channel.type not in ALLOWED_CHANNEL_TYPES
         or new_msg.channel.type == discord.ChannelType.private
-        or (discord_client.user not in new_msg.mentions and new_msg.channel.type != discord.ChannelType.public_thread)
+        or discord_client.user not in new_msg.mentions
         or new_msg.author.bot
     ):
         return
@@ -113,13 +115,13 @@ async def on_message(new_msg):
                 curr_node.text = "\n".join(
                     ([curr_msg.content] if curr_msg.content else [])
                     + [embed.description for embed in curr_msg.embeds if embed.description]
-                    + [requests.get(att.url).text for att in good_attachments["text"]]
+                    + [(await httpx_client.get(att.url)).text for att in good_attachments["text"]]
                 )
                 if curr_node.text.startswith(discord_client.user.mention):
                     curr_node.text = curr_node.text.replace(discord_client.user.mention, "", 1).lstrip()
 
                 curr_node.images = [
-                    dict(type="image_url", image_url=dict(url=f"data:{att.content_type};base64,{base64.b64encode(requests.get(att.url).content).decode('utf-8')}"))
+                    dict(type="image_url", image_url=dict(url=f"data:{att.content_type};base64,{b64encode((await httpx_client.get(att.url)).content).decode('utf-8')}"))
                     for att in good_attachments["image"]
                 ]
 
